@@ -120,42 +120,34 @@ void Camera::setIsoView()
 
 void Camera::pan(double u, double v)
 {
-    glm::vec3 panOffset = this->calcRight() * static_cast<float>(u)
-        + this->up * static_cast<float>(v);
+    glm::vec3 panOffset = (this->calcRight() * static_cast<float>(u))
+        + (this->up * static_cast<float>(v));
 
-    this->eye += panOffset;
-    this->target += panOffset;
+    this->translate(panOffset);
 }
 
 void Camera::orbit(glm::vec3 a, glm::vec3 b)
 {
-    glm::mat3 orbitMatrix;
-    glm::mat3 toWorldSpace;
+    double angle = glm::angle(a, b);
+    angle = std::max(angle, 0.0);
 
-    toWorldSpace = glm::transpose(glm::mat3(this->calcViewMatrix()));
+    glm::vec3 axis = glm::normalize(glm::cross(a, b));
+    glm::mat3 toWorldSpace = glm::transpose(glm::mat3(calcViewMatrix()));
 
-    double alpha = acos(static_cast<double>(glm::dot(a, b)));
-    glm::vec3 axis = glm::cross(a, b);
+    axis = toWorldSpace * axis;
 
-    glm::vec3 newAxis = toWorldSpace * axis;
+    glm::mat4 sourceMatrix(1.0f);
+    glm::mat4 rotationMatrix = glm::rotate(sourceMatrix,
+        static_cast<float>(angle), axis);
 
-
-    orbitMatrix = glm::mat3(glm::rotate(glm::mat4(1.0f),
-        static_cast<float>(alpha),
-        newAxis));
-
-    glm::vec3 newEye = this->target
-        + orbitMatrix * (this->eye - this->target);
-
-    glm::vec3 newUp = this->up * orbitMatrix;
-
-    this->eye = newEye;
-    this->up = newUp;
+    glm::vec3 direction = eye - target;
+    eye = glm::vec3(glm::vec4(target, 1.f) + (rotationMatrix * glm::vec4(direction, 0.f)));
+    up = glm::vec3(rotationMatrix * glm::vec4(up, 0.f));
 }
 
 void Camera::zoom(double factor)
 {
-    this->setDistanceToTarget(this->distanceFromEyeToTarget() + factor);
+    this->setDistanceToTarget(this->distanceFromEyeToTarget() - factor);
 }
 
 void Camera::zoomToFit(glm::vec3 min, glm::vec3 max)
@@ -200,9 +192,11 @@ void Camera::translate(glm::vec3 delta)
 
 void Camera::setDistanceToTarget(double D)
 {
-    glm::vec3 f = glm::normalize(target - eye);
-    f *= D;
-    this->eye = this->target - f;
+    if (D < 0.0)
+        return;
+
+    glm::vec3 f = glm::normalize(eye - target);
+    this->eye = this->target + (f * static_cast<float>(D));
 }
 
 void Camera::transform(const glm::mat4& trf)

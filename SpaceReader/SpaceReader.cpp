@@ -43,115 +43,6 @@ bool drawWithColor = true;
 
 void renderScene(GLRenderSystem& rs)
 {
-
-    /*enum class FACETS
-    {
-        FRONT,
-        RIGHT,
-        BACK,
-        LEFT,
-        TOP,
-        BOTTOM
-    };
-
-    const glm::vec3* NORMALS = new glm::vec3[6]     
-    {
-        glm::vec3(0.0f, 0.0f, 1.0f),    
-        glm::vec3(1.0f, 0.0f, 0.0f),    
-        glm::vec3(0.0f, 0.0f, -1.0f),   
-        glm::vec3(-1.0f, 0.0f, 0.0f),   
-        glm::vec3(0.0f, 1.0f, 0.0f),    
-        glm::vec3(0.0f, -1.0f, 0.0f)   
-    };
-
-    if (!setEncCube)
-    {
-        for (int vertex = 0; vertex < 8; vertex++)
-        {
-            cubeMax = glm::vec3{ std::max(CUBE_VERTICES[vertex].position.x, cubeMax.x),
-                                std::max(CUBE_VERTICES[vertex].position.y, cubeMax.y),
-                                std::max(CUBE_VERTICES[vertex].position.z, cubeMax.z) };
-
-            cubeMin = glm::vec3{ std::min(CUBE_VERTICES[vertex].position.x, cubeMin.x),
-                                std::min(CUBE_VERTICES[vertex].position.y, cubeMin.y),
-                                std::min(CUBE_VERTICES[vertex].position.z, cubeMin.z) };
-        }
-
-        setEncCube = true;
-
-        std::cout << "Min(" << cubeMin.x << ", " << cubeMin.y << ", " << cubeMin.z << ")\n";
-        std::cout << "Max(" << cubeMax.x << ", " << cubeMax.y << ", " << cubeMax.z << ")\n";
-    }
-
-    std::vector<Vertex> square; 
-    std::vector<Vertex> cubeMesh; 
-    for (int facet = 0; facet < 6; facet++)
-    {
-        square.clear();
-
-        switch (static_cast<FACETS>(facet))
-        {
-        case FACETS::FRONT:
-            square = {
-              CUBE_VERTICES[0],
-              CUBE_VERTICES[1],
-              CUBE_VERTICES[5],
-              CUBE_VERTICES[4]
-            };
-            break;
-        case FACETS::RIGHT:
-            square = {
-              CUBE_VERTICES[1],
-              CUBE_VERTICES[2],
-              CUBE_VERTICES[6],
-              CUBE_VERTICES[5]
-            };
-            break;
-        case FACETS::BACK:
-            square = {
-              CUBE_VERTICES[2],
-              CUBE_VERTICES[3],
-              CUBE_VERTICES[7],
-              CUBE_VERTICES[6]
-            };
-            break;
-        case FACETS::LEFT:
-            square = {
-              CUBE_VERTICES[3],
-              CUBE_VERTICES[0],
-              CUBE_VERTICES[4],
-              CUBE_VERTICES[7]
-            };
-            break;
-        case FACETS::TOP:
-            square = {
-              CUBE_VERTICES[4],
-              CUBE_VERTICES[5],
-              CUBE_VERTICES[6],
-              CUBE_VERTICES[7]
-            };
-            break;
-        case FACETS::BOTTOM:
-            square = {
-              CUBE_VERTICES[3],
-              CUBE_VERTICES[2],
-              CUBE_VERTICES[1],
-              CUBE_VERTICES[0]
-            };
-            break;
-        }
-
-        cubeMesh.push_back(Vertex{ square[0].position, NORMALS[facet] });
-        cubeMesh.push_back(Vertex{ square[2].position, NORMALS[facet] });
-        cubeMesh.push_back(Vertex{ square[3].position, NORMALS[facet] });
-
-        cubeMesh.push_back(Vertex{ square[0].position, NORMALS[facet] });
-        cubeMesh.push_back(Vertex{ square[1].position, NORMALS[facet] });
-        cubeMesh.push_back(Vertex{ square[2].position, NORMALS[facet] });
-    }
-
-    rs.renderTriangleSoup(cubeMesh);*/
-
     rs.renderSpacePoints(kinectSensor.getKinectData(), drawWithColor);
 }
 
@@ -258,6 +149,21 @@ double map(double var, double begin, double end,
     return result;
 }
 
+glm::vec3 setPointOnSphere(float xInTargetPlane, float yInTargetPlane)
+{
+    glm::vec3 pointOnSphere{ xInTargetPlane, yInTargetPlane, 0.0f };
+
+    // value outside sphere (R = 1), project it onto sphere
+    if (glm::length(pointOnSphere) >= 1.0f)
+        pointOnSphere = glm::normalize(pointOnSphere);
+
+    else  // point inside the sphere
+        pointOnSphere.z = std::sqrt(1.0f - std::pow(pointOnSphere.x, 2)
+            - std::pow(pointOnSphere.y, 2));
+
+    return pointOnSphere;
+}
+
 void onMouseButtonCallback(ButtonCode button, Action action, Modifier mods,
     double xpos, double ypos)
 {
@@ -265,17 +171,19 @@ void onMouseButtonCallback(ButtonCode button, Action action, Modifier mods,
     {
         if (action == Action::Press)
         {
+            double dx = viewport->calcTargetPlaneWidth() / 2.0;
+            double dy = viewport->calcTargetPlaneHeight() / 2.0;
             u0 = map(xpos,
                 0.0,
                 viewport->getWidth(),
-                -viewport->calcTargetPlaneWidth(),
-                viewport->calcTargetPlaneWidth());
+                -dx,
+                dx);
 
             v0 = map(ypos,
-                viewport->getHeight(),
                 0.0,
-                -viewport->calcTargetPlaneHeight(),
-                viewport->calcTargetPlaneHeight());
+                viewport->getHeight(),
+                dy,
+                -dy);
 
             mouseButton = 1;
         }
@@ -289,32 +197,13 @@ void onMouseButtonCallback(ButtonCode button, Action action, Modifier mods,
     {
         if (action == Action::Press)
         {
-            double xSphereVector = map(xpos,
-                0.0,
-                viewport->getWidth(),
-                -viewport->calcAspectRatio(),
-                viewport->calcAspectRatio());
+            double xOnTarget = map(xpos, 0.0, viewport->getWidth(),
+                -viewport->calcAspectRatio(), viewport->calcAspectRatio());
+            double yOnTarget = map(ypos, 0.0, viewport->getHeight(),
+                1.0, -1.0);
 
-            double ySphereVector = map(ypos,
-                viewport->getHeight(),
-                0.0,
-                -1.0,
-                1.0);
-
-            glm::vec3 pointOnSphere{ xSphereVector, ySphereVector, 0 };
-
-            if (glm::length(pointOnSphere) >= 1.0f)
-            {
-                pointOnSphere = glm::normalize(pointOnSphere);
-            }
-            else {
-                pointOnSphere.z = static_cast<float>(
-                    sqrt(1.0
-                        - pow(static_cast<double>(pointOnSphere.x), 2)
-                        - pow(static_cast<double>(pointOnSphere.y), 2)));
-            }
-
-            a = pointOnSphere;
+            a = setPointOnSphere(static_cast<float>(xOnTarget),
+                static_cast<float>(yOnTarget));
 
             mouseButton = 2;
         }
@@ -329,17 +218,11 @@ void cursorPosCallback(double xpos, double ypos)
 {
     if (mouseButton == 1)
     {
-        double u = map(xpos,
-            0.0,
-            viewport->getWidth(),
-            -viewport->calcTargetPlaneWidth(),
-            viewport->calcTargetPlaneWidth());
+        double dx = viewport->calcTargetPlaneWidth() / 2.0;
+        double dy = viewport->calcTargetPlaneHeight() / 2.0;
 
-        double v = map(ypos,
-            viewport->getHeight(),
-            0.0,
-            -viewport->calcTargetPlaneHeight(),
-            viewport->calcTargetPlaneHeight());
+        double u = map(xpos, 0.0, viewport->getWidth(), -dx, dx);
+        double v = map(ypos, 0.0, viewport->getHeight(), dy, -dy);
 
         double du = u0 - u;
         double dv = v0 - v;
@@ -351,35 +234,14 @@ void cursorPosCallback(double xpos, double ypos)
     }
     else if (mouseButton == 2)
     {
-        double xSphereVector = map(xpos,
-            0.0,
-            viewport->getWidth(),
-            -viewport->calcAspectRatio(),
-            viewport->calcAspectRatio());
+        double xOnTarget = map(xpos, 0.0, viewport->getWidth(),
+            -viewport->calcAspectRatio(), viewport->calcAspectRatio());
+        double yOnTarget = map(ypos, 0.0, viewport->getHeight(), 1, -1);
 
-        double ySphereVector = map(ypos,
-            viewport->getHeight(),
-            0.0,
-            -1.0,
-            1.0);
-
-        glm::vec3 pointOnSphere{ xSphereVector, ySphereVector, 0 };
-
-        if (glm::length(pointOnSphere) >= 1.0f)
-        {
-            pointOnSphere = glm::normalize(pointOnSphere);
-        }
-        else {
-            pointOnSphere.z = static_cast<float>(
-                sqrt(1.0
-                    - pow(static_cast<double>(pointOnSphere.x), 2)
-                    - pow(static_cast<double>(pointOnSphere.y), 2)));
-        }
-        b = pointOnSphere;
+        glm::vec3 b = setPointOnSphere(static_cast<float>(xOnTarget),
+            static_cast<float>(yOnTarget));
 
         viewport->getCamera().orbit(b, a);
-
-
         a = b;
     }
 }
