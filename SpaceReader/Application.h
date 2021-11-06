@@ -11,8 +11,8 @@ class Application
 public:
 	Application();
 	void run();
-	void createView(const std::string& title, unsigned int width, unsigned int height);
 	void createKinectView();
+	void createTriView(const std::vector<Vertex>& points, unsigned int width, unsigned int height);
 	void detachView(View& view);
 
 protected:

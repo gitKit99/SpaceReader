@@ -14,6 +14,8 @@ struct Vertex
     glm::vec3 color;
 };
 
+struct RenderHelper;
+
 class GLRenderSystem
 {
 public:
@@ -22,7 +24,7 @@ public:
     void clearDisplay(float r, float g, float b);
     void setViewport(double x, double y, double width, double height);
     void renderTriangleSoup(const std::vector<Vertex>& vertices);
-    void renderSpacePoints(const std::vector<Vertex>& points, bool drawWithColor);
+    void renderSpacePoints(const std::vector<Vertex>& points, RenderHelper);
 
     void setupLight(uint32_t index, glm::vec3 position, glm::vec3 Ia,
         glm::vec3 Id, glm::vec3 Is);

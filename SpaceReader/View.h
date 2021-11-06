@@ -18,6 +18,12 @@ struct EventHelper {
 	glm::vec3 vect_a{ 0.f, 0.f, 0.f };
 };
 
+struct RenderHelper {
+	bool drawWithColor = true;
+	int displayStyle = 0;
+	float pointSize = 1.f;
+};
+
 class Application;
 
 class View
@@ -41,10 +47,11 @@ protected:
 	virtual void onMouseButtonCallback(ButtonCode, Action, Modifier, double, double);
 
 	Viewport viewport;
-	std::unique_ptr<std::vector<Vertex>> data ;
+	std::unique_ptr<std::vector<Vertex>> data;
 	GLRenderSystem* rs = nullptr;
 	std::unique_ptr<GLWindow> window;
 	Application* parentApp = nullptr;
+	RenderHelper rHelper;
 
 private:
 	MouseState mouseState;

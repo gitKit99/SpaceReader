@@ -1,4 +1,5 @@
 #include "KinectView.h"
+#include "Application.h"
 
 KinectView::KinectView(GLRenderSystem& inRs, const std::string& title, Application& app)
 	: View(inRs, title, W_WIDTH, W_HEIGHT, app)
@@ -8,7 +9,7 @@ KinectView::KinectView(GLRenderSystem& inRs, const std::string& title, Applicati
 
 void KinectView::render()
 {
-	rs->renderSpacePoints(kinect.getKinectData(), rHelper.drawWithColor);
+	rs->renderSpacePoints(kinect.getKinectData(), rHelper);
 }
 
 void KinectView::onKeyCallback(KeyCode keyCode, Action action, Modifier mods) {
@@ -20,6 +21,11 @@ void KinectView::onKeyCallback(KeyCode keyCode, Action action, Modifier mods) {
 		case KeyCode::Key_S:
 			rHelper.displayStyle = (rHelper.displayStyle + 1) % 4;
 			kinect.setDisplayStyle(static_cast<DisplayStyle>(rHelper.displayStyle));
+			break;
+		case KeyCode::Key_T:
+			if (static_cast<DisplayStyle>(rHelper.displayStyle) == DisplayStyle::CHESS_ORDER) {
+				parentApp->createTriView(kinect.getKinectData(), W_WIDTH, W_HEIGHT);
+			}
 			break;
 		default:
 			break;

@@ -3,10 +3,6 @@
 #include "View.h"
 #include "KinectSensor.h"
 
-struct RenderHelper {
-	bool drawWithColor = true;
-	int displayStyle = 0;
-};
 
 class KinectView : public View
 {
@@ -21,6 +17,5 @@ protected:
 	virtual void onKeyCallback(KeyCode, Action, Modifier) override;
 
 	KinectSensor kinect;
-	RenderHelper rHelper;
 };
 

@@ -1,19 +1,26 @@
 #include "Application.h"
 #include "KinectView.h"
+#include "TriView.h"
+
+#include <iostream>
 
 Application::Application()
 {
 	rs.reset(new GLRenderSystem());
 }
 
-void Application::createView(const std::string& title, unsigned int width, unsigned int height)
-{
-}
-
 void Application::createKinectView()
 {
-	std::string title = "Kinect reader";
+	std::string title = "Kinect scene";
 	views[0].reset(new KinectView(*rs, title, *this));
+}
+
+void Application::createTriView(const std::vector<Vertex>& points,
+	unsigned int width, unsigned int height)
+{
+	std::string title = "Triangulation scene";
+	std::cout << "Points count " << points.size() << std::endl;
+	views[1].reset(new TriView(*rs, points, title, width, height, *this));
 }
 
 void Application::detachView(View& viewForDetach)

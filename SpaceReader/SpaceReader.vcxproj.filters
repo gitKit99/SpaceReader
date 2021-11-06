@@ -48,6 +48,9 @@
     <ClCompile Include="KinectView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TriView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KinectView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TriView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

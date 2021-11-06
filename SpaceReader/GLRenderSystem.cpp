@@ -1,4 +1,6 @@
 #include "GLRenderSystem.h"
+#include "View.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <cmath>
@@ -8,6 +10,7 @@ void GLRenderSystem::init()
 {
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_POINT_SMOOTH);
     glDepthFunc(GL_LEQUAL);
 }
 
@@ -44,7 +47,7 @@ void GLRenderSystem::renderTriangleSoup(const std::vector<Vertex>& vertices)
     this->renderMesh = vertices;
 }
 
-void GLRenderSystem::renderSpacePoints(const std::vector<Vertex>& points, bool drawWithColor)
+void GLRenderSystem::renderSpacePoints(const std::vector<Vertex>& points, RenderHelper rHelper)
 {
     glm::mat4 modelView = this->viewMatrix * this->worldMatrix;
     glMatrixMode(GL_MODELVIEW);
@@ -53,13 +56,13 @@ void GLRenderSystem::renderSpacePoints(const std::vector<Vertex>& points, bool d
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(glm::value_ptr(this->projMatrix));
 
+    glPointSize(rHelper.pointSize);
     glBegin(GL_POINTS);
-    glPointSize(1.f);
     for (std::vector<Vertex>::const_iterator it = points.cbegin(); it != points.cend(); it++)
     {
         glVertex3f(it->pos.x, it->pos.y, it->pos.z);
 
-        if (drawWithColor)
+        if (rHelper.drawWithColor)
             glColor3f(it->color.x, it->color.y, it->color.z);
         else
             glColor3f(1.f, 1.f, 1.f);

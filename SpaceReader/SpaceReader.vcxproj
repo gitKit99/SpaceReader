@@ -154,6 +154,7 @@
     <ClCompile Include="KinectView.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="SpaceReader.cpp" />
+    <ClCompile Include="TriView.cpp" />
     <ClCompile Include="View.cpp" />
     <ClCompile Include="Viewport.cpp" />
   </ItemGroup>
@@ -167,6 +168,7 @@
     <ClInclude Include="KinectSensor.h" />
     <ClInclude Include="KinectView.h" />
     <ClInclude Include="MathUtils.h" />
+    <ClInclude Include="TriView.h" />
     <ClInclude Include="View.h" />
     <ClInclude Include="Viewport.h" />
   </ItemGroup>

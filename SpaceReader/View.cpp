@@ -173,7 +173,7 @@ void View::setData(const std::vector<Vertex>& mesh) {
     data.reset(new std::vector<Vertex>(mesh.size()));
     
     for (size_t i = 0; i < mesh.size(); i++) {
-        data->at(i) = mesh.at(0);
+        (*data)[i] = mesh.at(i);
     }
 }
 
