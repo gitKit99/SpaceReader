@@ -55,6 +55,8 @@ View::View(GLRenderSystem& inRs, const std::string& title, unsigned int width,
 }
 
 void View::update() {
+    glfwMakeContextCurrent(window->getGLFWHandle());
+
     if (glfwWindowShouldClose(window->getGLFWHandle())) {
         delete window.release();
         parentApp->detachView(*this);

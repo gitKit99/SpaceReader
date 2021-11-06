@@ -9,7 +9,7 @@ GLWindow::GLWindow(const std::string& title, uint32_t width, uint32_t height)
     : width(width), height(height)
 {
     glfwInit();
-
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     handle = glfwCreateWindow(static_cast<int>(width),
         static_cast<int>(height),
         title.data(),
@@ -25,6 +25,11 @@ GLWindow::GLWindow(const std::string& title, uint32_t width, uint32_t height)
     }
 
     glfwSetWindowUserPointer(handle, this);
+}
+
+GLWindow::~GLWindow()
+{
+    glfwDestroyWindow(handle);
 }
 
 uint32_t GLWindow::getWidth()   const { return this->width; }

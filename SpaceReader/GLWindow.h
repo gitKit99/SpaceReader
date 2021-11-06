@@ -173,6 +173,7 @@ public:
     using ScrollCallback = std::function<void(double, double)>;
 
     GLWindow(const std::string& title, uint32_t width, uint32_t height);
+    ~GLWindow();
 
     uint32_t getWidth()         const;
     uint32_t getHeight()        const;
