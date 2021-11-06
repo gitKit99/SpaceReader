@@ -6,15 +6,11 @@
 #include <vector>
 #include <map>
 
+
 struct Vertex
 {
-    glm::vec3 position;
-    glm::vec3 normal;
-};
-
-struct SpacePoint
-{
     glm::vec3 pos;
+    glm::vec3 normal;
     glm::vec3 color;
 };
 
@@ -26,7 +22,7 @@ public:
     void clearDisplay(float r, float g, float b);
     void setViewport(double x, double y, double width, double height);
     void renderTriangleSoup(const std::vector<Vertex>& vertices);
-    void renderSpacePoints(const std::vector<SpacePoint>& points, bool drawWithColor);
+    void renderSpacePoints(const std::vector<Vertex>& points, bool drawWithColor);
 
     void setupLight(uint32_t index, glm::vec3 position, glm::vec3 Ia,
         glm::vec3 Id, glm::vec3 Is);

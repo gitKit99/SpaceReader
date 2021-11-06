@@ -145,21 +145,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GLRenderSystem.cpp" />
     <ClCompile Include="GLWindow.cpp" />
     <ClCompile Include="KinectSensor.cpp" />
+    <ClCompile Include="KinectView.cpp" />
+    <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="SpaceReader.cpp" />
+    <ClCompile Include="View.cpp" />
     <ClCompile Include="Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="glad.h" />
     <ClInclude Include="GLRenderSystem.h" />
     <ClInclude Include="GLWindow.h" />
     <ClInclude Include="khrplatform.h" />
     <ClInclude Include="KinectSensor.h" />
+    <ClInclude Include="KinectView.h" />
+    <ClInclude Include="MathUtils.h" />
+    <ClInclude Include="View.h" />
     <ClInclude Include="Viewport.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

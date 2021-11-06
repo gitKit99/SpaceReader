@@ -24,6 +24,7 @@ enum class Action
 
 enum class ButtonCode
 {
+    Undefined = -1,
     Button_1 = 0,
     Button_2 = 1,
     Button_3 = 2,

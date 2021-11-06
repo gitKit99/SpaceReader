@@ -73,7 +73,7 @@ void KinectSensor::getRgbData(float* fdest)
 	sensor->NuiImageStreamReleaseFrame(rgbStream, &imageFrame);
 }
 
-void KinectSensor::convertToSpacePoints(SpacePoint** data)
+void KinectSensor::convertToSpacePoints(Vertex** data)
 {
 	spacePoints.clear();
 	for (int j = 0; j < height; j++) {
@@ -84,7 +84,7 @@ void KinectSensor::convertToSpacePoints(SpacePoint** data)
 			if (style != DisplayStyle::RECT_GRID && ((j % step_j != 0) || (i % step_i != 0)))
 				continue;
 
-			spacePoints.push_back(SpacePoint{ data[j][i] });
+			spacePoints.push_back(Vertex{ data[j][i] });
 		}
 	}
 }
@@ -95,9 +95,9 @@ bool KinectSensor::shouldSkip(int j, int i) {
 
 KinectSensor::KinectSensor()
 {
-	kinectData = new SpacePoint* [height];
+	kinectData = new Vertex* [height];
 	for (size_t i = 0; i < height; i++)
-		kinectData[i] = new SpacePoint[width];
+		kinectData[i] = new Vertex[width];
 }
 
 bool KinectSensor::initKinect()
@@ -125,7 +125,7 @@ bool KinectSensor::initKinect()
 	return sensor;
 }
 
-const std::vector<SpacePoint>& KinectSensor::getKinectData()
+const std::vector<Vertex>& KinectSensor::getKinectData()
 {
 	/*float* ptr = new float[3 * pointsCount];
 	if (ptr) {

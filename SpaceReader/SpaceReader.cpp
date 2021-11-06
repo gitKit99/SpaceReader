@@ -1,13 +1,15 @@
 #include <iostream>
 #include <limits>
 #include <iterator>
+#include <array>
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "glwindow.h"
-#include "glrendersystem.h"
-#include "viewport.h"
+#include "GLWindow.h"
+#include "GLRenderSystem.h"
+#include "Viewport.h"
 #include "KinectSensor.h"
+#include "Application.h"
 
 #define INF std::numeric_limits<float>::infinity()
 
@@ -23,18 +25,18 @@ const glm::vec3 defColor{ 1.f, 1.f, 1.f };
 
 unsigned int style = 0;
 
-const std::vector<SpacePoint> CUBE_VERTICES = 
+const std::vector<Vertex> CUBE_VERTICES = 
 {
-    SpacePoint{glm::vec3(-L / 2, -L / 2, L / 2), defColor},
-    SpacePoint{glm::vec3(L / 2, -L / 2, L / 2), defColor},
-    SpacePoint{glm::vec3(L / 2, -L / 2, -L / 2), defColor},
-    SpacePoint{glm::vec3(-L / 2, -L / 2, -L / 2), defColor},
+    Vertex{glm::vec3(-L / 2, -L / 2, L / 2), defColor},
+    Vertex{glm::vec3(L / 2, -L / 2, L / 2), defColor},
+    Vertex{glm::vec3(L / 2, -L / 2, -L / 2), defColor},
+    Vertex{glm::vec3(-L / 2, -L / 2, -L / 2), defColor},
 
 
-    SpacePoint{glm::vec3(-L / 2, L / 2, L / 2), defColor},
-    SpacePoint{glm::vec3(L / 2, L / 2, L / 2), defColor},
-    SpacePoint{glm::vec3(L / 2, L / 2, -L / 2), defColor},
-    SpacePoint{glm::vec3(-L / 2, L / 2, -L / 2), defColor}
+    Vertex{glm::vec3(-L / 2, L / 2, L / 2), defColor},
+    Vertex{glm::vec3(L / 2, L / 2, L / 2), defColor},
+    Vertex{glm::vec3(L / 2, L / 2, -L / 2), defColor},
+    Vertex{glm::vec3(-L / 2, L / 2, -L / 2), defColor}
 };
 
 KinectSensor kinectSensor;
@@ -249,7 +251,13 @@ void cursorPosCallback(double xpos, double ypos)
 
 int main()
 {
-    rs = new GLRenderSystem();
+    Application app;
+    app.createKinectView();
+
+    app.run();
+
+
+    /*rs = new GLRenderSystem();
     viewport = new Viewport();
 
     GLWindow window("myWindow", 640, 480);
@@ -283,5 +291,5 @@ int main()
         glfwWaitEvents();
     }
 
-    glfwTerminate();
+    glfwTerminate();*/
 }

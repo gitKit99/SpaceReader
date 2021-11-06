@@ -37,14 +37,14 @@ void GLRenderSystem::renderTriangleSoup(const std::vector<Vertex>& vertices)
         it != vertices.cend(); it++)
     {
         glNormal3f(it->normal.x, it->normal.y, it->normal.z);
-        glVertex3f(it->position.x, it->position.y, it->position.z);
+        glVertex3f(it->pos.x, it->pos.y, it->pos.z);
     }
     glEnd();
 
     this->renderMesh = vertices;
 }
 
-void GLRenderSystem::renderSpacePoints(const std::vector<SpacePoint>& points, bool drawWithColor)
+void GLRenderSystem::renderSpacePoints(const std::vector<Vertex>& points, bool drawWithColor)
 {
     glm::mat4 modelView = this->viewMatrix * this->worldMatrix;
     glMatrixMode(GL_MODELVIEW);
@@ -55,7 +55,7 @@ void GLRenderSystem::renderSpacePoints(const std::vector<SpacePoint>& points, bo
 
     glBegin(GL_POINTS);
     glPointSize(1.f);
-    for (std::vector<SpacePoint>::const_iterator it = points.cbegin(); it != points.cend(); it++)
+    for (std::vector<Vertex>::const_iterator it = points.cbegin(); it != points.cend(); it++)
     {
         glVertex3f(it->pos.x, it->pos.y, it->pos.z);
 
