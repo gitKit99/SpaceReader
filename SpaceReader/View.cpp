@@ -64,7 +64,7 @@ void View::update() {
     }
 
     rs->setViewport(0, 0, window->getWidth(), window->getHeight());
-    rs->clearDisplay(0.5f, 0.5f, 0.5f);
+    rs->clearDisplay(0.25f, 0.25f, 0.25f);
 
     rs->setViewMatrix(viewport.getCamera().calcViewMatrix());
     rs->setProjMatrix(viewport.calcProjMatrix());
