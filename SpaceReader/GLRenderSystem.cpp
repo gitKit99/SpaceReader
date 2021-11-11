@@ -150,3 +150,12 @@ const std::vector<Vertex>& GLRenderSystem::getRenderMesh()
 {
     return this->renderMesh;
 }
+
+bool Vertex::operator==(const Vertex& other) const
+{
+    const static double EPSILON = 1e-7;
+
+    return (std::fabs(pos.x - other.pos.x) < EPSILON
+        && std::fabs(pos.y - other.pos.y) < EPSILON
+        && std::fabs(pos.z - other.pos.z) < EPSILON);
+}

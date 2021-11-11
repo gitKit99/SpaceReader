@@ -12,6 +12,8 @@ struct Vertex
     glm::vec3 pos;
     glm::vec3 normal;
     glm::vec3 color;
+
+    bool operator==(const Vertex& other) const;
 };
 
 struct RenderHelper;
