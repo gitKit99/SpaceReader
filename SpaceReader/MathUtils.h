@@ -1,5 +1,13 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
+struct Plane3D
+{
+	glm::vec3 point;
+	glm::vec3 normal;
+};
+
 static class MathUtils
 {
 public:

@@ -51,9 +51,6 @@
     <ClCompile Include="TriView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pivoter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Edge.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -93,9 +90,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TriView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Pivoter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Edge.h">

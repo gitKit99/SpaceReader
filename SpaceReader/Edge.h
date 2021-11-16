@@ -1,25 +1,28 @@
 #pragma once
 
-#include <utility>
+#include <pcl/common/common.h>
+#include <boost/shared_ptr.hpp>
 #include <vector>
-#include <string>
+#include <ostream>
 
-#include "GLRenderSystem.h"
+// Edge smart pointer
+class Edge;
+typedef boost::shared_ptr<Edge> EdgePtr;
 
-typedef std::pair<Vertex, int> PointData;
+typedef std::pair<pcl::PointNormal *, int> PointData;
 
 class Edge
 {
 public:
 	Edge();
-	Edge(const PointData& v0, const PointData& v1, const PointData& opposite, glm::vec3 center);
-	Edge(const Edge& other);
+	Edge(const PointData &_v0, const PointData &_v1, const PointData &_opposite, const pcl::PointNormal &_center);
+	Edge(const Edge &_other);
 	~Edge();
 
-	Edge& operator=(const Edge& other);
-	bool operator<(const Edge& other) const;
-	bool operator==(const Edge& other) const;
-	bool operator!=(const Edge& other) const;
+	Edge &operator=(const Edge &_other);
+	bool operator<(const Edge &_other) const;
+	bool operator==(const Edge &_other) const;
+	bool operator!=(const Edge &_other) const;
 
 	inline void setActive(const bool _active)
 	{
@@ -31,25 +34,25 @@ public:
 		return active;
 	}
 
-	inline PointData getVertex(const int n) const
+	inline PointData getVertex(const int _n) const
 	{
-		if (n < 2)
-			return vertices[n];
+		if (_n < 2)
+			return vertices[_n];
 		else
-			return std::make_pair<Vertex, int>(Vertex{}, -1);
+			return std::make_pair<pcl::PointNormal *, int>(NULL, -1);
 	}
 
-	inline PointData getOppositeVertex()
+	inline PointData getOppositeVertex() const
 	{
 		return oppositeVertex;
 	}
 
-	inline glm::vec3 getMiddlePoint() const
+	inline pcl::PointNormal getMiddlePoint() const
 	{
 		return middlePoint;
 	}
 
-	inline glm::vec3 getBallCenter() const
+	inline pcl::PointNormal getBallCenter() const
 	{
 		return ballCenter;
 	}
@@ -57,6 +60,12 @@ public:
 	inline double getPivotingRadius() const
 	{
 		return pivotingRadius;
+	}
+
+	inline std::string toString() const
+	{
+		return "";
+		//return dynamic_cast<std::stringstream &>((std::stringstream() << std::dec << vertices[0].second << "-" << vertices[1].second)).str();
 	}
 
 private:
@@ -68,12 +77,11 @@ private:
 
 	std::vector<PointData> vertices;
 	PointData oppositeVertex;
-	glm::vec3 ballCenter;
-	glm::vec3 middlePoint;
+	pcl::PointNormal ballCenter;
+	pcl::PointNormal middlePoint;
 	double pivotingRadius;
 	bool active;
 
 	long id;
 	std::string str;
 };
-

@@ -1,88 +1,88 @@
 #include "Edge.h"
-
+#include <Eigen/src/Core/Matrix.h>
 
 Edge::Edge()
 {
 	vertices.clear();
-	oppositeVertex = std::make_pair<Vertex, int>(Vertex{}, -1);
-	ballCenter = middlePoint = glm::vec3();
+	oppositeVertex = std::make_pair<pcl::PointNormal*, int>(NULL, -1);
+	ballCenter = middlePoint = pcl::PointNormal();
 	pivotingRadius = 0;
 	active = false;
 	setId();
 	str = "";
 }
 
-Edge::Edge(const PointData& v0, const PointData& v1, const PointData& opposite, 
-	glm::vec3 center)
+Edge::Edge(const PointData& _v0, const PointData& _v1, const PointData& _opposite, const pcl::PointNormal& _ballCenter)
 {
-	vertices.push_back(v0);
-	vertices.push_back(v1);
-	oppositeVertex = opposite;
+	vertices.push_back(_v0);
+	vertices.push_back(_v1);
+	oppositeVertex = _opposite;
 
-	ballCenter = center;
-	middlePoint = glm::vec3{ (v0.first.pos.x + v1.first.pos.x) * 0.5,
-							(v0.first.pos.y + v1.first.pos.y) * 0.5,
-							(v0.first.pos.z + v1.first.pos.z) * 0.5 };
+	ballCenter = _ballCenter;
+	//middlePoint = Helper::makePointNormal((_v0.first->x + _v1.first->x) * 0.5, (_v0.first->y + _v1.first->y) * 0.5, (_v0.first->z + _v1.first->z) * 0.5);
 
-	pivotingRadius = glm::length(middlePoint - center);
+	Eigen::Vector3f m = middlePoint.getVector3fMap();
+	Eigen::Vector3f c = ballCenter.getVector3fMap();
+	pivotingRadius = (m - c).norm();
 
 	active = true;
 	setId();
+
+	str = this->toString();
 }
 
-Edge::Edge(const Edge& other)
+Edge::Edge(const Edge& _other)
 {
-	vertices = other.vertices;
-	oppositeVertex = other.oppositeVertex;
+	vertices = _other.vertices;
+	oppositeVertex = _other.oppositeVertex;
 
-	ballCenter = other.ballCenter;
-	pivotingRadius = other.pivotingRadius;
+	ballCenter = _other.ballCenter;
+	pivotingRadius = _other.pivotingRadius;
 
-	middlePoint = other.middlePoint;
-	active = other.active;
-	id = other.id;
+	middlePoint = _other.middlePoint;
+	active = _other.active;
+	id = _other.id;
 
-	str = other.str;
+	str = _other.str;
 }
 
 Edge::~Edge()
 {
 }
 
-Edge& Edge::operator=(const Edge& other)
+Edge& Edge::operator=(const Edge& _other)
 {
-	if (this != &other)
+	if (this != &_other)
 	{
-		vertices = other.vertices;
-		oppositeVertex = other.oppositeVertex;
+		vertices = _other.vertices;
+		oppositeVertex = _other.oppositeVertex;
 
-		ballCenter = other.ballCenter;
-		pivotingRadius = other.pivotingRadius;
+		ballCenter = _other.ballCenter;
+		pivotingRadius = _other.pivotingRadius;
 
-		middlePoint = other.middlePoint;
-		active = other.active;
-		id = other.id;
+		middlePoint = _other.middlePoint;
+		active = _other.active;
+		id = _other.id;
 
-		str = other.str;
+		str = _other.str;
 	}
 
 	return *this;
 }
 
-bool Edge::operator<(const Edge& other) const
+bool Edge::operator<(const Edge& _other) const
 {
-	return pivotingRadius < other.pivotingRadius;
+	return pivotingRadius < _other.pivotingRadius;
 }
 
-bool Edge::operator==(const Edge& other) const
+bool Edge::operator==(const Edge& _other) const
 {
-	bool equals = (vertices[0] == other.vertices[0] || vertices[0] == other.vertices[1]) 
-			&& (vertices[1] == other.vertices[0] || vertices[1] == other.vertices[1]);
+	bool equals = (vertices[0] == _other.vertices[0] || vertices[0] == _other.vertices[1]) && (vertices[1] == _other.vertices[0] || vertices[1] == _other.vertices[1]);
 
 	return equals;
 }
 
-bool Edge::operator!=(const Edge& other) const
+bool Edge::operator!=(const Edge& _other) const
 {
-	return !this->operator==(other);
+	return !this->operator==(_other);
 }
