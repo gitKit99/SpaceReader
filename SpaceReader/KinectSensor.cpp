@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <iostream>
 
 
 void KinectSensor::getDepthData(float* fdest)
@@ -100,12 +101,28 @@ KinectSensor::KinectSensor()
 		kinectData[i] = new Vertex[width];
 }
 
+KinectSensor::~KinectSensor()
+{
+	for (size_t i = 0; i < height; i++) {
+		delete[] kinectData[i];
+	}
+	delete[] kinectData;
+}
+
 bool KinectSensor::initKinect()
 {
 	// Get a working kinect sensor
 	int numSensors;
-	if (NuiGetSensorCount(&numSensors) < 0 || numSensors < 1) return false;
-	if (NuiCreateSensorByIndex(0, &sensor) < 0) return false;
+
+	if ((NuiGetSensorCount(&numSensors) < 0) || (numSensors < 1)
+			|| (NuiCreateSensorByIndex(0, &sensor) < 0)) {
+		for (size_t i = 0; i < height; i++) {
+			delete[] kinectData[i];
+		}
+		delete[] kinectData;
+		kinectData = sensorMock.readData(width, height);
+		return false;
+	}
 
 	// Initialize sensor
 	sensor->NuiInitialize(NUI_INITIALIZE_FLAG_USES_DEPTH | NUI_INITIALIZE_FLAG_USES_COLOR);
@@ -138,8 +155,10 @@ const std::vector<Vertex>& KinectSensor::getKinectData()
 		//convertToSpacePoints(ptr, false);
 	}*/
 	float* ptr = nullptr;
-	getDepthData(ptr);
-	getRgbData(ptr);
+	if (sensor != nullptr) {
+		getDepthData(ptr);
+		getRgbData(ptr);
+	}
 	convertToSpacePoints(kinectData);
 	return spacePoints;
 }
@@ -187,4 +206,9 @@ void KinectSensor::decreaseCameraAngle()
 		cameraAngle = -27;
 
 	sensor->NuiCameraElevationSetAngle(cameraAngle);
+}
+
+void KinectSensor::writeDataToFile()
+{
+	sensorMock.writeData(kinectData, width, height);
 }

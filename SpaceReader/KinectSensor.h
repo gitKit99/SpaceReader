@@ -10,6 +10,7 @@
 #include <NuiSensor.h>
 
 #include "GLRenderSystem.h"
+#include "KinectSensorMock.h"
 
 enum class DisplayStyle {
 	ALL_POINTS,
@@ -27,7 +28,7 @@ private:
 	int pointsCount = width * height;
 	HANDLE depthStream;
 	HANDLE rgbStream;
-	INuiSensor* sensor;
+	INuiSensor* sensor = nullptr;
 	long depthToRgbMap[width * height * 2];
 	std::vector<Vertex> spacePoints;
 	DisplayStyle style = DisplayStyle::ALL_POINTS;
@@ -37,6 +38,7 @@ private:
 	int readWidth = width;
 
 	Vertex** kinectData;
+	KinectSensorMock sensorMock;
 
 	long cameraAngle;
 
@@ -44,8 +46,10 @@ private:
 	void getRgbData(float* dest);
 	void convertToSpacePoints(Vertex** data);
 	bool shouldSkip(int j, int i);
+
 public:
 	KinectSensor();
+	~KinectSensor();
 	bool initKinect();
 	const std::vector<Vertex>& getKinectData();
 	int getWidth() { return width; }
@@ -54,5 +58,6 @@ public:
 	void setDisplayStyle(DisplayStyle inStyle);
 	void increaseCameraAngle();
 	void decreaseCameraAngle();
+	void writeDataToFile();
 };
 
