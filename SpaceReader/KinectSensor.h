@@ -31,7 +31,7 @@ private:
 	INuiSensor* sensor = nullptr;
 	long depthToRgbMap[width * height * 2];
 	std::vector<Vertex> spacePoints;
-	DisplayStyle style = DisplayStyle::ALL_POINTS;
+	DisplayStyle style = DisplayStyle::CHESS_ORDER;
 	int step_i = 1;
 	int step_j = 1;
 	int readHeight = height;

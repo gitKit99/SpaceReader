@@ -8,8 +8,9 @@
 
 void GLRenderSystem::init()
 {
-    glShadeModel(GL_SMOOTH);
+    //glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_NORMALIZE);
     glDepthFunc(GL_LEQUAL);
 }
 
@@ -101,6 +102,32 @@ void GLRenderSystem::setupLight(uint32_t index, glm::vec3 position,
 
     glEnable(GL_LIGHTING);
     glDisable(GL_LIGHT0);
+}
+
+void GLRenderSystem::renderLines(const std::vector<Vertex>& vertices)
+{
+    glm::mat4 modelView = viewMatrix * worldMatrix;
+    glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf(glm::value_ptr(modelView));
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixf(glm::value_ptr(projMatrix));
+
+    glColorMaterial(GL_FRONT, GL_DIFFUSE);
+    if (!glIsEnabled(GL_COLOR_MATERIAL))
+        glEnable(GL_COLOR_MATERIAL);
+
+    glLineWidth(1.0f);
+    glBegin(GL_LINES);
+
+    for (const Vertex& curVert : vertices)
+    {
+        glNormal3f(curVert.normal.x, curVert.normal.y, curVert.normal.z);
+        glColor3f(curVert.color.x, curVert.color.y, curVert.color.z);
+        glVertex3f(curVert.pos.x, curVert.pos.y, curVert.pos.z);
+    }
+
+    glEnd();
 }
 
 void GLRenderSystem::turnLight(uint32_t index, bool enable)

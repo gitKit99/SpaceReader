@@ -113,6 +113,7 @@ bool KinectSensor::initKinect()
 {
 	// Get a working kinect sensor
 	int numSensors;
+	setDisplayStyle(style);
 
 	if ((NuiGetSensorCount(&numSensors) < 0) || (numSensors < 1)
 			|| (NuiCreateSensorByIndex(0, &sensor) < 0)) {
@@ -182,8 +183,8 @@ void KinectSensor::setDisplayStyle(DisplayStyle inStyle)
 		step_j = 1;
 		break;
 	case DisplayStyle::CHESS_ORDER:
-		step_i = 15;
-		step_j = 15;
+		step_i = 5;
+		step_j = 5;
 		break;
 	default:
 		break;

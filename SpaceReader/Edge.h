@@ -65,7 +65,6 @@ public:
 	inline std::string toString() const
 	{
 		return "";
-		//return dynamic_cast<std::stringstream &>((std::stringstream() << std::dec << vertices[0].second << "-" << vertices[1].second)).str();
 	}
 
 private:

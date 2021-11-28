@@ -27,6 +27,7 @@ public:
     void setViewport(double x, double y, double width, double height);
     void renderTriangleSoup(const std::vector<Vertex>& vertices);
     void renderSpacePoints(const std::vector<Vertex>& points, RenderHelper);
+    void GLRenderSystem::renderLines(const std::vector<Vertex>& vertices);
 
     void setupLight(uint32_t index, glm::vec3 position, glm::vec3 Ia,
         glm::vec3 Id, glm::vec3 Is);

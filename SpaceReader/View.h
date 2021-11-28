@@ -22,6 +22,7 @@ struct RenderHelper {
 	bool drawWithColor = true;
 	int displayStyle = 0;
 	float pointSize = 1.f;
+	bool drawLines = false;
 };
 
 class Application;

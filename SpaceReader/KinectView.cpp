@@ -28,9 +28,9 @@ void KinectView::onKeyCallback(KeyCode keyCode, Action action, Modifier mods) {
 			break;
 
 		case KeyCode::Key_T:
-			if (static_cast<DisplayStyle>(rHelper.displayStyle) == DisplayStyle::CHESS_ORDER) {
+			//if (static_cast<DisplayStyle>(rHelper.displayStyle) == DisplayStyle::CHESS_ORDER) {
 				parentApp->createTriView(kinect.getKinectData(), W_WIDTH, W_HEIGHT);
-			}
+			//}
 			break;
 
 		case KeyCode::Key_F:

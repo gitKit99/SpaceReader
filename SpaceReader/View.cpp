@@ -4,6 +4,9 @@
 
 #include <functional>
 #include <utility>
+
+#define EPSILON	1e-7
+
 namespace OperatorUtils {
     glm::vec3 setPointOnSphere(float xInTargetPlane, float yInTargetPlane)
     {
@@ -49,7 +52,7 @@ View::View(GLRenderSystem& inRs, const std::string& title, unsigned int width,
         glm::vec3{ 0.f, 0.f, 0.f }, glm::vec3{ 0.f, 1.f, 0.f });
 
     rs->init();
-    rs->turnLight(0, true);
+    //rs->turnLight(GL_LIGHT0, true);
 
     additionalRenderSetup();
 }
@@ -80,7 +83,7 @@ void View::onKeyCallback(KeyCode keyCode, Action action, Modifier mods) {
 }
 
 void View::scrollCallback(double xoffset, double yoffset) {
-    viewport.getCamera().zoom(yoffset);
+    viewport.getCamera().zoom(yoffset / 20.);
 }
 
 void View::cursorPosCallback(double xpos, double ypos) {
@@ -172,10 +175,12 @@ void View::setData(const std::vector<Vertex>& mesh) {
     if (data != nullptr) {
         data->clear();
     }
-    data.reset(new std::vector<Vertex>(mesh.size()));
+    data.reset(new std::vector<Vertex>());
     
     for (size_t i = 0; i < mesh.size(); i++) {
-        (*data)[i] = mesh.at(i);
+        const Vertex& v = mesh.at(i);
+        if (std::fabs(glm::length(v.pos)) >= EPSILON)
+            data->push_back(v);
     }
 }
 

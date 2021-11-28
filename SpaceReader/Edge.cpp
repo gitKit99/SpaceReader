@@ -1,4 +1,5 @@
 #include "Edge.h"
+#include "Helper.h"
 #include <Eigen/src/Core/Matrix.h>
 
 Edge::Edge()
@@ -19,7 +20,7 @@ Edge::Edge(const PointData& _v0, const PointData& _v1, const PointData& _opposit
 	oppositeVertex = _opposite;
 
 	ballCenter = _ballCenter;
-	//middlePoint = Helper::makePointNormal((_v0.first->x + _v1.first->x) * 0.5, (_v0.first->y + _v1.first->y) * 0.5, (_v0.first->z + _v1.first->z) * 0.5);
+	middlePoint = Helper::makePointNormal((_v0.first->x + _v1.first->x) * 0.5, (_v0.first->y + _v1.first->y) * 0.5, (_v0.first->z + _v1.first->z) * 0.5);
 
 	Eigen::Vector3f m = middlePoint.getVector3fMap();
 	Eigen::Vector3f c = ballCenter.getVector3fMap();
