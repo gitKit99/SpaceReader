@@ -199,9 +199,9 @@ TrianglePtr Pivoter::findSeed()
 								return seed;
 							}
 						}
-						else std::cout << "Ball is not empty" << std::endl;
+						/*else std::cout << "Ball is not empty" << std::endl;*/
 					}
-					else std::cout << "Ball center cant be found" << std::endl;
+					/*else std::cout << "Ball center cant be found" << std::endl;*/
 				}
 			}
 		}
@@ -310,7 +310,7 @@ bool Pivoter::getBallCenter(const int _index0, const int _index1, const int _ind
 			_center = circle.first + distance * normal;
 			status = true;
 		}
-		else std::cout << "Squared distance was zero" << std::endl;
+		/*else std::cout << "Squared distance was zero" << std::endl;*/
 	}
 	//else std::cout << "Points are collinear" << std::endl;
 	return status;

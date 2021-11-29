@@ -10,6 +10,8 @@
 #include "Front.h"
 #include "Config.h"
 
+const glm::vec3 KINECT_NORMAL{ 0.f, 0.f, -1.f };
+
 std::vector<Vertex>* Triangulation::ballPivotingTriangulation(const std::vector<Vertex>& points)
 {
 	double ballRadius = Config::getBallRadius();
@@ -74,17 +76,19 @@ std::vector<Vertex>* Triangulation::ballPivotingTriangulation(const std::vector<
 
 	for (TrianglePtr tPtr : mesh) {
 		if (tPtr) {
-			pcl::PointNormal* tN = tPtr->getVertex(0).first;
-			glm::vec3 triNormal = glm::normalize(glm::vec3{ tN->normal_x, tN->normal_y, tN->normal_z });
+			bool shouldInvert = false;
+			glm::vec3 triNormal = calcNormal(*tPtr.get());
+			if (glm::dot(triNormal, KINECT_NORMAL) < 0.f)
+				shouldInvert = true;
 			for (int i = 0; i < 3; i++) {
-				pcl::PointNormal* p = tPtr->getVertex(i).first;
+				pcl::PointNormal* p = tPtr->getVertex((shouldInvert) ? (2 - i) : i).first;
 				if (!p) {
 					std::cout << "Triangle point was null" << std::endl;
 					break;
 				}
 				Vertex vert;
 				vert.pos = glm::vec3{ p->x, p->y, p->z };
-				vert.normal = triNormal;
+				vert.normal = (shouldInvert) ? -triNormal : triNormal;
 				resultMesh->push_back(vert);
 			}
 		}
@@ -93,4 +97,19 @@ std::vector<Vertex>* Triangulation::ballPivotingTriangulation(const std::vector<
 	}
 
 	return resultMesh;
+}
+
+glm::vec3 Triangulation::calcNormal(const Triangle& triangle)
+{
+	glm::vec3 p0{ triangle.getVertex(0).first->x, triangle.getVertex(0).first->y,
+		triangle.getVertex(0).first->z };
+	glm::vec3 p1{ triangle.getVertex(1).first->x, triangle.getVertex(1).first->y,
+		triangle.getVertex(1).first->z };
+	glm::vec3 p2{ triangle.getVertex(2).first->x, triangle.getVertex(2).first->y,
+		triangle.getVertex(2).first->z };
+
+	glm::vec3 a = p1 - p0;
+	glm::vec3 b = p2 - p0;
+
+	return glm::normalize(glm::cross(a, b));
 }

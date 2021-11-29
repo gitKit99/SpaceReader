@@ -16,5 +16,6 @@ protected:
 	std::unique_ptr<std::vector<Vertex>> lines;
 	RenderHelper mrHelper;
 	bool renderMesh = true;
+	bool renderEdges = true;
 };
 

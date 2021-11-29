@@ -51,14 +51,13 @@ void Front::addEdges(const TrianglePtr& _triangle)
 
 void Front::joinAndFix(const std::pair<int, TrianglePtr>& _data, Pivoter& _pivoter)
 {
-	DebugLevel debug = Config::getDebugLevel();
-
 	if (!_pivoter.isUsed(_data.first))
 	{
 		/**
 		 * This is the easy case, the new point has not been used
 		 */
 		 // Add new edges
+		//std::cout << "Not used" << std::endl;
 		for (int i = 0; i < 2; i++)
 		{
 			EdgePtr edge = _data.second->getEdge(i);
@@ -79,51 +78,51 @@ void Front::joinAndFix(const std::pair<int, TrianglePtr>& _data, Pivoter& _pivot
 	}
 	else
 	{
-		if (inFront(_data.first))
-		{
-			/**
-			 * Point in front, so orientation must be check, and join and glue must be done
-			 */
-			int added = 0;
-			for (int i = 0; i < 2; i++)
-			{
-				EdgePtr edge = _data.second->getEdge(i);
-				std::list<EdgePtr>::iterator it;
-				if ((it = isPresent(edge)) != front.end())
-				{
-					removeEdgePoints(*it);
-					front.erase(it);
-				}
-				else
-				{
-					std::list<EdgePtr>::iterator insertionPlace = front.insert(pos, edge);
-					addEdgePoints(insertionPlace);
-					added--;
-				}
-			}
+		//if (inFront(_data.first))
+		//{
+		//	/**
+		//	 * Point in front, so orientation must be check, and join and glue must be done
+		//	 */
+		//	int added = 0;
+		//	for (int i = 0; i < 2; i++)
+		//	{
+		//		EdgePtr edge = _data.second->getEdge(i);
+		//		std::list<EdgePtr>::iterator it;
+		//		if ((it = isPresent(edge)) != front.end())
+		//		{
+		//			removeEdgePoints(*it);
+		//			front.erase(it);
+		//		}
+		//		else
+		//		{
+		//			std::list<EdgePtr>::iterator insertionPlace = front.insert(pos, edge);
+		//			addEdgePoints(insertionPlace);
+		//			added--;
+		//		}
+		//	}
 
-			removeEdgePoints(*pos);
-			//auto& forErase = pos;
-			front.erase(pos);
+		//	removeEdgePoints(*pos);
+		//	//auto& forErase = pos;
+		//	front.erase(pos);
 
-			// Move iterator to the first added new edge
-			if (added < 0)
-				advance(pos, added);
-			else
-				// Reset the position
-				pos = front.begin();
-
-			//front.erase(forErase);
-		}
-		else
-		{
+		//	// Move iterator to the first added new edge
+		//	if (added < 0)
+		//		advance(pos, added);
+		//	else {
+		//		// Reset the position
+		//		pos = front.begin();
+		//	}
+		//	//front.erase(forErase);
+		//}
+		//else
+		//{
 			/**
 			 * The point is not part of any front edge, hence is an internal
 			 * point, so this edge can't be done. In consequence this a boundary
 			 */
-			std::cout << "Not a part of front" << std::endl;
+			//std::cout << "Not a part of front" << std::endl;
 			setInactive(*pos);
-		}
+		//}
 	}
 }
 

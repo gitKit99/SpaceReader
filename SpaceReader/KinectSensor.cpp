@@ -183,8 +183,8 @@ void KinectSensor::setDisplayStyle(DisplayStyle inStyle)
 		step_j = 1;
 		break;
 	case DisplayStyle::CHESS_ORDER:
-		step_i = 5;
-		step_j = 5;
+		step_i = 4;
+		step_j = 4;
 		break;
 	default:
 		break;

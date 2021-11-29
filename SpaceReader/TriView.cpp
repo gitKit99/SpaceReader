@@ -29,7 +29,8 @@ void TriView::render()
 	if (mesh) {
 		if (renderMesh)
 			rs->renderTriangleSoup(*mesh);
-		rs->renderLines(*lines);
+		if (renderEdges)
+			rs->renderLines(*lines);
 	}
 	if (data) {
 		rs->renderSpacePoints(*data, rHelper);
@@ -55,6 +56,9 @@ void TriView::onKeyCallback(KeyCode key, Action action, Modifier mods)
 			break;
 		case KeyCode::Key_M:
 			renderMesh = !renderMesh;
+			break;
+		case KeyCode::Key_L:
+			renderEdges = !renderEdges;
 			break;
 		default:
 			break;
